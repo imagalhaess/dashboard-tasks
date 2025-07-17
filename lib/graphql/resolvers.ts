@@ -2,7 +2,7 @@ import { tasks, Task } from "./mockData";
 
 export const resolvers = {
   Query: {
-    gestTasks: (_parent: any, args: { category?: string; take?: number }) => {
+    getTasks: (_parent: any, args: { category?: string; take?: number }) => {
       // 1. Filtra as tarefas pela categoria, se fornecida
       let result = tasks;
       if (args.category) {
