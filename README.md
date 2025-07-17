@@ -77,52 +77,54 @@ O deploy está configurado via Vercel:
 
 ## Estrutura de Pastas
 
-```
+````
+# Estrutura Final de Pastas e Arquivos
+
+```text
 dashboard-tasks/
 ├── .gitignore
 ├── README.md
+├── eslint.config.mjs
+├── next-env.d.ts
 ├── next.config.ts
 ├── package.json
+├── package-lock.json
 ├── postcss.config.js
 ├── tailwind.config.js
 ├── tsconfig.json
 │
 ├── app/                                # Next.js App Router
-│   ├── globals.css                     # CSS global com Tailwind
-│   ├── layout.tsx                      # Layout raiz (navbar etc)
-│   ├── page.tsx                        # Página “/” → <TaskList />
-│   └── api/
-│       └── graphql/
-│           └── route.ts                # Handler GraphQL
+│   ├── layout.tsx                      # Layout raiz
+│   ├── page.tsx                        # Página home → <TaskList />
+│   └── api/graphql/route.ts            # Handler GraphQL
 │
-├── components/                         # UI puras, sem lógica de fetch
+├── components/                         # Componentes de UI sem lógica de dados
+│   ├── Filter.tsx
 │   ├── TaskCard.tsx
-│   ├── TaskList.tsx
-│   └── Filter.tsx
+│   └── TaskList.tsx
 │
-├── lib/                                # Código de negócio e data-layer
-│   └── graphql/
-│       ├── typeDefs.ts                 # schema SDL
-│       ├── mockData.ts                 # array de Task[] tipado
-│       └── resolvers.ts                # filtrar, ordenar, updateStatus
+├── lib/graphql/                       # Lógica de dados e schema em memória
+│   ├── client.ts                       # Instância do GraphQL Client
+│   ├── mockData.ts                     # Array de Task[] tipado
+│   ├── resolvers.ts                    # getTasks & updateTaskStatus
+│   └── typeDefs.ts                     # SDL do schema
 │
 ├── hooks/                              # React hooks de data-fetch
-│   ├── useTasks.ts                     # query getTasks
-│   └── useToggleStatus.ts              # mutation updateTaskStatus
+│   ├── useTasks.ts                     # Query getTasks
+│   └── useToggleStatus.ts              # Mutation updateTaskStatus
 │
-├── styles/                             # CSS adicionais (reset, temas)
-│   └── globals.css
+├── styles/                             # CSS adicionais ou reset
+│   └── globals.css                     # Import Tailwind e customizações
 │
-├── tests/                              # Jest + RTL
+├── tests/                              # Testes Jest + React Testing Library
 │   ├── TaskList.test.tsx
 │   └── TaskCard.test.tsx
 │
-├── docs/                               # documentação
-│   └── modelagem.md
+├── docs/                               # Documentação conceitual
+│   └── modelagem.md                    # Diagrama de entidades e processos
 │
-└── public/                             # assets estáticos
-
-```
+└── public/                             # Assets estáticos (SVGs, favicon, etc.)
+````
 
 ---
 
@@ -155,6 +157,6 @@ Cards principais da POC:
 
 ---
 
-## Licença D:\Work\dashboard-tasks\dashboard-tasks
+## Licença
 
 MIT © Isabela M.
