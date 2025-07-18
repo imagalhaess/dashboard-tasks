@@ -5,7 +5,7 @@ import type { Task } from "./mockData";
 /** Retorna o endpoint GraphQL como URL absoluta */
 function getEndpoint() {
   if (typeof window !== "undefined") {
-    // No browser usar window.location.origin para obter "http(s)://host[:porta]"
+    // No browser usar window.location.origin para obter 'http(s)://host[:porta]'
     return `${window.location.origin}/api/graphql`;
   }
   // No server, em dev, hardcode para localhost:3000

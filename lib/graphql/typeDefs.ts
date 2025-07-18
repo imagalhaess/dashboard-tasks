@@ -1,4 +1,4 @@
-import { gql } from "graphql-tag";
+import { gql } from 'graphql-tag';
 
 export const typeDefs = gql`
   # Define o tipo User, que agrupa primeiro e último nome
