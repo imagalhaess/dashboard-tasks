@@ -2,40 +2,72 @@
 
 import React from "react";
 import type { Task } from "@/lib/graphql/mockData";
+import { useToggleStatus } from "@/hooks/useToggleStatus";
 
 interface TaskCardProps {
   task: Task;
+  onStatusUpdate: (t: Task) => void;
 }
 
-export default function TaskCard({ task }: TaskCardProps) {
+export default function TaskCard({ task, onStatusUpdate }: TaskCardProps) {
+  const { toggleStatus, isLoading } = useToggleStatus();
+
+  const handleClick = async () => {
+    try {
+      const updated = await toggleStatus(task.id, task.status);
+      onStatusUpdate(updated);
+    } catch {
+      // error já é tratado no hook
+    }
+  };
+
   return (
     <div className="p-4 bg-white rounded shadow">
-      {" "}
-      {/* Card Tailwind */}
-      <h3 className="text-lg font-semibold">{task.title}</h3> {/* Título */}
+      {/* 1. Título */}
+      <h3 className="text-lg font-semibold">{task.title}</h3>
+
+      {/* 2. Descrição (se existir) */}
       {task.description && (
         <p className="text-sm text-gray-600 mt-1">{task.description}</p>
-      )}{" "}
-      {/* Descrição */}
-      <div className="mt-2 text-sm">
-        <span className="font-medium">Categoria:</span> {task.category}
-        <br />
-        <span className="font-medium">Status:</span> {task.status}
-        <br />
-        <span className="font-medium">Criado em:</span>{" "}
-        {new Date(task.createdAt).toLocaleString()}
-        <br />
-        <span className="font-medium">Autor:</span> {task.user.firstName}{" "}
-        {task.user.lastName}
+      )}
+
+      {/* 3. Detalhes */}
+      <div className="mt-2 text-sm space-y-1">
+        <div>
+          <span className="font-medium">Categoria:</span> {task.category}
+        </div>
+        <div>
+          <span className="font-medium">Status:</span> {task.status}
+        </div>
+        <div>
+          <span className="font-medium">Criado em:</span>{" "}
+          {new Date(task.createdAt).toLocaleString()}
+        </div>
+        <div>
+          <span className="font-medium">Autor:</span> {task.user.firstName}{" "}
+          {task.user.lastName}
+        </div>
       </div>
+
+      {/* 4. Botão de toggle */}
       <button
-        className="mt-3 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-        onClick={() => {
-          // placeholder para lógica de toggle
-          console.log("Toggle status for", task.id);
-        }}
+        onClick={handleClick}
+        disabled={isLoading}
+        className={`
+          mt-4 px-3 py-1 rounded text-white 
+          ${
+            task.status === "pending"
+              ? "bg-blue-500 hover:bg-blue-600"
+              : "bg-green-500 hover:bg-green-600"
+          } 
+          ${isLoading ? "opacity-50 cursor-not-allowed" : ""}
+        `}
       >
-        {task.status === "pending" ? "Concluir" : "Reabrir"}
+        {isLoading
+          ? "Atualizando..."
+          : task.status === "pending"
+          ? "Concluir"
+          : "Reabrir"}
       </button>
     </div>
   );
