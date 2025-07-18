@@ -36,9 +36,16 @@ export async function fetchTasks(
   category?: string,
   take = 10
 ): Promise<Task[]> {
-  const data = await client.request<{ getTasks: Task[] }>(GET_TASKS, {
-    category,
-    take,
-  });
-  return data.getTasks;
+  // 1) monta variáveis de query
+  const variables: { take: number; category?: string } = { take };
+  // 2) só adiciona category se não for string vazia
+  if (category?.trim()) {
+    variables.category = category;
+  }
+  // 3) chama a query com apenas os parâmetros necessários
+  const { getTasks } = await client.request<{ getTasks: Task[] }>(
+    GET_TASKS,
+    variables
+  );
+  return getTasks;
 }
