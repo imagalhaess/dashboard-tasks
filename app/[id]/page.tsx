@@ -2,10 +2,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { tasks, type Task } from "@/lib/graphql/mockData";
 
-// A interface TaskPageProps foi removida para se adequar ao novo padrão do Next.js exigido no deploy.
+// Passo 1: Cria um tipo explícito e mais completo para as props da página,
+// incluindo 'searchParams' para satisfazer o Next.js.
+type Props = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-// O tipo das props agora é definido diretamente aqui:
-export default function TaskPage({ params }: { params: { id: string } }) {
+// Passo 2: Define o componente como 'async' e usa o novo tipo 'Props'.
+export default async function TaskPage({ params }: Props) {
   const { id } = params;
 
   const task: Task | undefined = tasks.find((t) => t.id === id);
