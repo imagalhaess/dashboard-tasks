@@ -2,7 +2,10 @@ import { tasks, Task } from "./mockData";
 
 export const resolvers = {
   Query: {
-    getTasks: (_parent: any, args: { category?: string; take?: number }) => {
+    getTasks: (
+      _parent: unknown,
+      args: { category?: string; take?: number }
+    ) => {
       // 1. Filtra as tarefas pela categoria, se fornecida
       let result = tasks;
       if (args.category) {
@@ -18,7 +21,10 @@ export const resolvers = {
     },
   },
   Mutation: {
-    updateTaskStatus: (_parent: any, args: { id: string; status: string }) => {
+    updateTaskStatus: (
+      _parent: unknown,
+      args: { id: string; status: string }
+    ) => {
       const idx = tasks.findIndex((t) => t.id === args.id);
       if (idx < 0) {
         throw new Error("Task not found");
