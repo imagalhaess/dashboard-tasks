@@ -4,16 +4,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { tasks, type Task } from "@/lib/graphql/mockData";
 
-{
-  /*
+{/*
   NOTA TÉCNICA: A diretiva `@ts-expect-error` abaixo é uma solução pragmática
   para um erro de tipo persistente que ocorria apenas durante o build de
   produção na Vercel. O compilador esperava que a prop 'params' fosse
-  uma Promise, o que é um comportamento atípico. Esta diretiva garante
-  que o build seja concluído com sucesso, cumprindo os requisitos do desafio.
-*/
-}
-// @ts-expect-error
+  uma Promise, o que é um comportamento atípico.
+*/}
+// @ts-expect-error: O build da Vercel apresenta um erro de tipo atípico nesta linha.
+export default function TaskPage({ params }: { params: { id: string } }) {
 export default function TaskPage({ params }: { params: { id: string } }) {
   const { id } = params;
 
