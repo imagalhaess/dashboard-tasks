@@ -39,7 +39,7 @@ Uma aplicação web simples para listar, filtrar e gerenciar tarefas, construíd
 1.  **Clone o repositório:**
 
     ```bash
-    git clone [https://github.com/imagalhaess/dashboard-tasks.git](https://github.com/imagalhaess/dashboard-tasks.git)
+    git clone https://github.com/imagalhaess/dashboard-tasks.git
     ```
 
 2.  **Navegue até a pasta do projeto:**
