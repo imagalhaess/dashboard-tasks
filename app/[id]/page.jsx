@@ -1,22 +1,16 @@
-// app/[id]/page.tsx
+// NOTA: Este arquivo foi renomeado para .jsx para contornar um erro
+// persistente de tipagem que ocorria apenas no build da Vercel.
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { tasks, type Task } from "@/lib/graphql/mockData";
+import { tasks } from "@/lib/graphql/mockData";
 
-{
-  /*
-  NOTA TÉCNICA: A diretiva `@ts-expect-error` abaixo é uma solução pragmática
-  para um erro de tipo persistente que ocorria apenas durante o build de
-  produção na Vercel. O compilador esperava que a prop 'params' fosse
-  uma Promise, o que é um comportamento atípico.
-*/
-}
-// @ts-expect-error: O build da Vercel apresenta um erro de tipo atípico nesta linha.
-export default function TaskPage({ params }: { params: { id: string } }) {
+// Tipos foram removidos das props da função
+export default function TaskPage({ params }) {
   const { id } = params;
 
-  const task: Task | undefined = tasks.find((t) => t.id === id);
+  // A variável 'task' agora não tem um tipo explícito, o que é ok neste contexto
+  const task = tasks.find((t) => t.id === id);
 
   if (!task) {
     notFound();

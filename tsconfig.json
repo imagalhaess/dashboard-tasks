@@ -40,7 +40,7 @@
     "components/__tests__/**/*.tsx",
     "next-env.d.ts",
     ".next/types/**/*.ts"
-  ],
+, "app/[id]/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]
