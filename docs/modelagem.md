@@ -40,7 +40,7 @@ As entidades principais do sistema foram modeladas para refletir uma aplicação
 
 ## 3. Contrato da API (Schema GraphQL)
 
-O schema GraphQL é a fonte única da verdade para a comunicação entre o frontend e o backend. Ele define todas as operações de leitura (Query) e escrita (Mutation) disponíveis.
+O schema GraphQL é a fonte única para a comunicação entre o frontend e o backend. Ele define todas as operações de leitura (Query) e escrita (Mutation) disponíveis.
 
 ```graphql
 # Define o tipo User, que agrupa primeiro e último nome
@@ -84,7 +84,7 @@ type Mutation {
   Alteração para rota dinâmica interna (`/[id]`).
 
 - **Justificativa**  
-   O link externo direcionava para uma página de login, quebrando a experiência do usuário. A criação de uma página interna permitiu demonstrar a habilidade de construir rotas dinâmicas com Server Components no Next.js, entregando uma funcionalidade mais completa e relevante para o desafio.
+   O link externo direcionava para uma página de login, quebrando a experiência do usuário. A criação de uma página interna permitiu entregar uma funcionalidade mais completa e relevante para o desafio.
 
 ---
 
