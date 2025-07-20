@@ -1,159 +1,79 @@
-# Dashboard de Gestão de Tarefas
+# Dash de Gestão de Tarefas
 
-Uma aplicação simples para listar, filtrar e atualizar o status de tarefas, consumindo uma API GraphQL em TypeScript e estilizada com Tailwind CSS.
-
-> **MVP 20/80:**
->
-> 1. Listagem das 10 tarefas mais recentes
-> 2. Filtro por categoria
-> 3. Botão de Concluir/Reabrir (toggle de status)
-> 4. Feedback instantâneo na UI (sem reload)
-> 5. Deploy automático em Vercel
-> 6. README com instruções básicas
+Uma aplicação web simples para listar, filtrar e gerenciar tarefas, construída com Next.js, TypeScript e GraphQL como parte de um desafio técnico para a empresa Chave7.
 
 ---
 
-## Tecnologias
+## Acessar a Aplicação Publicada
 
-- **Frontend:** Next.js (App Router) + TypeScript
-- **Estilização:** Tailwind CSS
-- **API:** GraphQL em TypeScript (mock em memória)
-- **Testes:** Jest + React Testing Library
-- **Deploy:** Vercel (preview deploys em cada PR, produção na `main`)
-- **Ferramentas auxiliares:** Node.js, Git
+[https://dashboard-tasks-y8sz.vercel.app/]
 
 ---
 
-## Como rodar localmente
+## Sumário
+
+- Tecnologias Utilizadas
+- Como Rodar o Projeto Localmente
+- Como Rodar os Testes
+- Abordagem Técnica
+- Processo de Trabalho
+- Licença
+
+---
+
+## Tecnologias Utilizadas
+
+Frontend: Next.js (App Router), React, TypeScript
+Estilização: Tailwind CSS
+API: GraphQL (com Apollo Server e dados mockados)
+Testes: Jest e React Testing Library
+Deploy: Vercel
+
+---
+
+## Como Rodar o Projeto Localmente
 
 ### Pré-requisitos
 
 - Node.js (versão LTS recomendada)
 - Git
 
-### Passos
+### Instruções
 
 ```bash
-# 1. Clone o repositório
-git clone https://github.com/seu-usuario/dashboard-tasks.git
-cd dashboard-tasks
-
-# 2. Crie e acesse a branch da POC
-git checkout -b poc-inicial
-
-# 3. Instale dependências
-npm install
-
-# 4. Inicie o servidor de desenvolvimento
-npm run dev
+    git clone https://github.com/imagalhaess/dashboard-tasks.git
+    cd dashboard-tasks
+    npm install
+    npm run dev
 ```
 
-Acesse [http://localhost:3000](http://localhost:3000)
+A aplicação estará disponível em `http://localhost:3000`.
 
 ---
 
-## Testes
+## Como Rodar os Testes
 
-Para executar os testes de unidade e integração:
+Para executar os testes unitários que garantem o funcionamento dos componentes principais, utilize o comando:
 
 ```bash
-npm test
+    npm test
 ```
 
-- **TaskList.test.tsx**: verifica renderização e filtro
-- **TaskCard.test.tsx**: verifica ação de status
+---
+
+## Abordagem Técnica
+
+A arquitetura foi construída com Next.js e o App Router para aproveitar os Server Components e a organização de rotas baseada em pastas. A comunicação com o backend foi feita via GraphQL, uma escolha que permite ao frontend requisitar exatamente os dados de que precisa, evitando over-fetching.
+
+Para um detalhamento mais aprofundado das decisões técnicas e dos desafios encontrados durante o desenvolvimento, consulte o Registro de Decisões de Arquitetura em `docs/modelagem.md`.
 
 ---
 
-## Deploy
+## Processo de Trabalho
 
-O deploy está configurado via Vercel:
+O desenvolvimento foi gerenciado utilizando um quadro Kanban no GitHub Projects para organizar as tarefas desde o backlog até a conclusão, seguindo um fluxo de trabalho ágil.
 
-1. Conecte seu repositório ao Vercel.
-2. Configure variáveis de ambiente (nenhuma obrigatória para o mock).
-3. Cada PR gera um _Preview Deploy_; merges na `main` rodam o _Production Deploy_.
-
----
-
-## Estrutura de Pastas
-
-````
-# Estrutura Final de Pastas e Arquivos
-
-```
-dashboard-tasks/
-├── .gitignore
-├── README.md
-├── eslint.config.mjs
-├── next-env.d.ts
-├── next.config.ts
-├── package.json
-├── package-lock.json
-├── postcss.config.js
-├── tailwind.config.js
-├── tsconfig.json
-│
-├── app/                                # Next.js App Router
-│   ├── layout.tsx                      # Layout raiz
-│   ├── page.tsx                        # Página home → <TaskList />
-│   └── api/graphql/route.ts            # Handler GraphQL
-│
-├── components/                         # Componentes de UI sem lógica de dados
-│   ├── Filter.tsx
-│   ├── TaskCard.tsx
-│   └── TaskList.tsx
-│
-├── lib/graphql/                       # Lógica de dados e schema em memória
-│   ├── client.ts                       # Instância do GraphQL Client
-│   ├── mockData.ts                     # Array de Task[] tipado
-│   ├── resolvers.ts                    # getTasks & updateTaskStatus
-│   └── typeDefs.ts                     # SDL do schema
-│
-├── hooks/                              # React hooks de data-fetch
-│   ├── useTasks.ts                     # Query getTasks
-│   └── useToggleStatus.ts              # Mutation updateTaskStatus
-│
-├── styles/                             # CSS adicionais ou reset
-│   └── globals.css                     # Import Tailwind e customizações
-│
-├── tests/                              # Testes Jest + React Testing Library
-│   ├── TaskList.test.tsx
-│   └── TaskCard.test.tsx
-│
-├── docs/                               # Documentação conceitual
-│   └── modelagem.md                    # Diagrama de entidades e processos
-│
-└── public/                             # Assets estáticos (SVGs, favicon, etc.)
-````
-
----
-
-## Kanban & Processo de Trabalho
-
-Usei um **GitHub Project** com colunas:
-
-- **Backlog**: cards da POC inicial
-- **In Progress**: tarefas em desenvolvimento
-- **Done**: concluídas
-
-Cards principais da POC:
-
-- Setup inicial
-- Schema & Mock
-- API Route GraphQL
-- Client: fetchTasks & Listagem
-- Filtro por categoria
-- Ações Concluir/Reabrir
-
----
-
-## Contribuindo
-
-1. Fork este repositório
-2. Crie uma branch `feature/xx`
-3. Faça commits pequenos e descritivos (`feat: listagem básica`)
-4. Abra um Pull Request para `main`
-5. Espere revisão e aprovação
+Acessar o Quadro Kanban do Projeto: https://github.com/users/imagalhaess/projects/3
 
 ---
 
