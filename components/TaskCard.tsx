@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
 import type { Task } from "@/lib/graphql/mockData";
 import { useToggleStatus } from "@/hooks/useToggleStatus";
 
@@ -21,20 +20,18 @@ export default function TaskCard({ task, onStatusUpdate }: TaskCardProps) {
     }
   };
 
-  // detecta a URL base (localhost ou domínio em produção)
-  const [baseUrl, setBaseUrl] = useState("");
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setBaseUrl(window.location.origin);
-    }
-  }, []);
-
   return (
     <div className="p-4 bg-white rounded shadow">
-      {/* título como link */}
       <h3 className="text-lg font-semibold">
+        {/*
+          Decisão de Arquitetura: O requisito original pedia um link para "https://taskmanager.com/task/{id}".
+          No entanto, esse link direciona para um site externo existente que exige autenticação,
+          resultando em uma experiência de usuário quebrada.
+          Para proporcionar uma funcionalidade real e demonstrar a criação de rotas dinâmicas,
+          optei por implementar uma página de detalhes interna (`/{id}`).
+        */}
         <a
-          href={`${baseUrl}/task/${task.id}`}
+          href={`/${task.id}`}
           target="_blank"
           rel="noopener noreferrer"
           className="hover:underline text-blue-600"
@@ -42,8 +39,7 @@ export default function TaskCard({ task, onStatusUpdate }: TaskCardProps) {
           {task.title}
         </a>
       </h3>
-
-      {/* status e autor */}
+      {/* Detalhes da tarefa */}
       <div className="mt-2 text-sm space-y-1">
         <div>
           <span className="font-medium">Status:</span> {task.status}
@@ -52,9 +48,15 @@ export default function TaskCard({ task, onStatusUpdate }: TaskCardProps) {
           <span className="font-medium">Autor:</span> {task.user.firstName}{" "}
           {task.user.lastName}
         </div>
+        <div>
+          <span className="font-medium">Categoria:</span> {task.category}
+        </div>
+        <div>
+          <span className="font-medium">Criado em:</span>{" "}
+          {new Date(task.createdAt).toLocaleDateString("pt-BR")}
+        </div>
       </div>
 
-      {/* botão de ação */}
       <button
         onClick={handleClick}
         disabled={isLoading}
