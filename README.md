@@ -80,7 +80,7 @@ O deploy está configurado via Vercel:
 ````
 # Estrutura Final de Pastas e Arquivos
 
-```text
+```
 dashboard-tasks/
 ├── .gitignore
 ├── README.md
