@@ -1,17 +1,9 @@
 {
   "name": "dashboard-tasks",
   "version": "1.0.0",
-  "description": "Gerenciador de tarefas simples com HTML, CSS e JavaScript puro",
+  "description": "Gerenciador de tarefas - HTML, CSS e JavaScript puro",
   "private": true,
-  "scripts": {
-    "dev": "npx serve public",
-    "start": "npx serve public"
-  },
-  "keywords": [
-    "tasks",
-    "todo",
-    "gerenciador"
-  ],
+  "keywords": ["tasks", "todo", "gerenciador"],
   "author": "",
   "license": "MIT"
 }
