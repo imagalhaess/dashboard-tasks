@@ -3,235 +3,304 @@ import { useState } from "react";
 import { useTasks } from "@/hooks/useTasks";
 import TaskCard from "@/components/TaskCard";
 
-/*
-  TaskList - Lista de tarefas com filtros elegantes
-  
-  Funcionalidades:
-  1. Filtro por categoria com botões visuais (não dropdown)
-  2. Filtro por status (todas, pendentes, concluídas)
-  3. Contador de tarefas
-  4. Estados de loading e erro bem desenhados
-  5. Mensagem quando não há tarefas
-  
-  UX:
-  - Filtros visuais e interativos
-  - Feedback visual claro do filtro ativo
-  - Grid responsivo que se adapta ao tamanho da tela
-*/
+/**
+ * TaskList - Sistema completo de gerenciamento de tarefas
+ *
+ * Layout:
+ * - Sidebar fixa com filtros e navegação
+ * - Área principal com grid de tarefas
+ * - Responsivo: sidebar vira menu em mobile
+ */
 export default function TaskList() {
+  const [view, setView] = useState<"all" | "today" | "week" | "completed">(
+    "all"
+  );
+  const [priority, setPriority] = useState<string>("");
   const [category, setCategory] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<
-    "all" | "pending" | "completed"
-  >("all");
-  const { tasks, loading, error, updateLocalTask } = useTasks(category);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Filtra tarefas por status
+  const { tasks, loading, error, updateLocalTask } = useTasks();
+
+  // Filtrar tarefas
   const filteredTasks = tasks.filter((task) => {
-    if (statusFilter === "all") return true;
-    return task.status === statusFilter;
+    // Filtro de visualização
+    if (view === "completed" && task.status !== "completed") return false;
+    if (view === "today") {
+      const today = new Date().toDateString();
+      const taskDate = new Date(task.createdAt).toDateString();
+      if (today !== taskDate) return false;
+    }
+
+    // Filtro de categoria
+    if (category && task.category !== category) return false;
+
+    return true;
   });
 
-  // Calcula estatísticas
-  const totalTasks = tasks.length;
-  const pendingTasks = tasks.filter((t) => t.status === "pending").length;
-  const completedTasks = tasks.filter((t) => t.status === "completed").length;
+  // Contadores
+  const counts = {
+    all: tasks.length,
+    today: tasks.filter(
+      (t) => new Date(t.createdAt).toDateString() === new Date().toDateString()
+    ).length,
+    week: tasks.length, // Simplificado
+    completed: tasks.filter((t) => t.status === "completed").length,
+    work: tasks.filter((t) => t.category === "Trabalho").length,
+    personal: tasks.filter((t) => t.category === "Pessoal").length,
+    study: tasks.filter((t) => t.category === "Estudos").length,
+  };
 
-  // Categorias disponíveis
-  const categories = [
-    { value: "", label: "Todas", icon: "📋" },
-    { value: "Trabalho", label: "Trabalho", icon: "💼" },
-    { value: "Pessoal", label: "Pessoal", icon: "🏠" },
-    { value: "Estudos", label: "Estudos", icon: "📚" },
-  ];
-
-  // Estado de loading
+  // Loading state
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <div className="relative w-16 h-16">
-          {/* Spinner animado */}
-          <div className="absolute inset-0 border-4 border-neutral-200 dark:border-neutral-700 rounded-full"></div>
-          <div className="absolute inset-0 border-4 border-warm-orange border-t-transparent rounded-full animate-spin"></div>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-emerald-600"></div>
+          <p className="mt-4 text-gray-600">Carregando tarefas...</p>
         </div>
-        <p className="mt-4 text-neutral-600 dark:text-neutral-400 font-medium">
-          Carregando suas tarefas...
-        </p>
       </div>
     );
   }
 
-  // Estado de erro
+  // Error state
   if (error) {
     return (
-      <div className="bg-warm-red/10 border-2 border-warm-red/20 rounded-xl p-6 text-center">
-        <div className="text-4xl mb-3">⚠️</div>
-        <h3 className="text-lg font-semibold text-warm-red mb-2">
-          Ops! Algo deu errado
-        </h3>
-        <p className="text-neutral-600 dark:text-neutral-400">{error}</p>
+      <div className="flex-1 flex items-center justify-center p-8">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md text-center">
+          <div className="text-4xl mb-3">⚠️</div>
+          <h3 className="text-lg font-semibold text-red-800 mb-2">
+            Ops! Algo deu errado
+          </h3>
+          <p className="text-red-600">{error}</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Painel de estatísticas */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {/* Card Total */}
-        <div className="bg-gradient-to-br from-cool-blue/10 to-cool-blue/5 dark:from-cool-blue/20 dark:to-cool-blue/10 border border-cool-blue/20 rounded-xl p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">
-                Total
-              </p>
-              <p className="text-3xl font-bold text-cool-blue">{totalTasks}</p>
-            </div>
-            <div className="text-4xl">📊</div>
-          </div>
+    <>
+      {/* Sidebar - Filtros e navegação */}
+      <aside
+        className={`
+        fixed lg:sticky top-16 left-0 bottom-0 
+        w-64 bg-white border-r border-gray-200 
+        p-6 overflow-y-auto z-40
+        transition-transform duration-300
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+      `}
+      >
+        {/* Visualizações */}
+        <div className="mb-8">
+          <h2 className="text-xs font-bold uppercase text-gray-500 mb-3 tracking-wider">
+            Visualizações
+          </h2>
+          <nav className="space-y-1">
+            <button
+              onClick={() => {
+                setView("all");
+                setPriority("");
+                setCategory("");
+              }}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                view === "all" && !priority && !category
+                  ? "bg-emerald-100 text-emerald-700 font-semibold"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <span className="flex items-center gap-3">
+                <span>📋</span>
+                <span>Todas as Tarefas</span>
+              </span>
+              <span className="text-xs bg-gray-200 px-2 py-1 rounded-full">
+                {counts.all}
+              </span>
+            </button>
+
+            <button
+              onClick={() => {
+                setView("today");
+                setPriority("");
+                setCategory("");
+              }}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                view === "today"
+                  ? "bg-emerald-100 text-emerald-700 font-semibold"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <span className="flex items-center gap-3">
+                <span>📅</span>
+                <span>Hoje</span>
+              </span>
+              <span className="text-xs bg-gray-200 px-2 py-1 rounded-full">
+                {counts.today}
+              </span>
+            </button>
+
+            <button
+              onClick={() => {
+                setView("completed");
+                setPriority("");
+                setCategory("");
+              }}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                view === "completed"
+                  ? "bg-emerald-100 text-emerald-700 font-semibold"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <span className="flex items-center gap-3">
+                <span>✓</span>
+                <span>Concluídas</span>
+              </span>
+              <span className="text-xs bg-gray-200 px-2 py-1 rounded-full">
+                {counts.completed}
+              </span>
+            </button>
+          </nav>
         </div>
 
-        {/* Card Pendentes */}
-        <div className="bg-gradient-to-br from-warm-orange/10 to-warm-orange/5 dark:from-warm-orange/20 dark:to-warm-orange/10 border border-warm-orange/20 rounded-xl p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">
-                Pendentes
-              </p>
-              <p className="text-3xl font-bold text-warm-orange">
-                {pendingTasks}
-              </p>
-            </div>
-            <div className="text-4xl">⏱</div>
-          </div>
+        {/* Categorias */}
+        <div>
+          <h2 className="text-xs font-bold uppercase text-gray-500 mb-3 tracking-wider">
+            Categorias
+          </h2>
+          <nav className="space-y-1">
+            <button
+              onClick={() => {
+                setCategory("Trabalho");
+                setView("all");
+                setPriority("");
+              }}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                category === "Trabalho"
+                  ? "bg-blue-100 text-blue-700 font-semibold"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <span className="flex items-center gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                <span>Trabalho</span>
+              </span>
+              <span className="text-xs bg-gray-200 px-2 py-1 rounded-full">
+                {counts.work}
+              </span>
+            </button>
+
+            <button
+              onClick={() => {
+                setCategory("Pessoal");
+                setView("all");
+                setPriority("");
+              }}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                category === "Pessoal"
+                  ? "bg-emerald-100 text-emerald-700 font-semibold"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <span className="flex items-center gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <span>Pessoal</span>
+              </span>
+              <span className="text-xs bg-gray-200 px-2 py-1 rounded-full">
+                {counts.personal}
+              </span>
+            </button>
+
+            <button
+              onClick={() => {
+                setCategory("Estudos");
+                setView("all");
+                setPriority("");
+              }}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                category === "Estudos"
+                  ? "bg-purple-100 text-purple-700 font-semibold"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <span className="flex items-center gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                <span>Estudos</span>
+              </span>
+              <span className="text-xs bg-gray-200 px-2 py-1 rounded-full">
+                {counts.study}
+              </span>
+            </button>
+          </nav>
+        </div>
+      </aside>
+
+      {/* Overlay para mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Botão hamburguer mobile */}
+      <button
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        className="fixed bottom-6 right-6 lg:hidden bg-emerald-600 text-white p-4 rounded-full shadow-lg z-50"
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
+
+      {/* Área principal de conteúdo */}
+      <main className="flex-1 p-6 lg:p-8 max-w-7xl">
+        {/* Header da seção */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">
+            {view === "all" && !category
+              ? "Todas as Tarefas"
+              : view === "today"
+              ? "Tarefas de Hoje"
+              : view === "completed"
+              ? "Tarefas Concluídas"
+              : category
+              ? category
+              : "Tarefas"}
+          </h2>
+          <p className="text-gray-600">Gerencie suas atividades</p>
         </div>
 
-        {/* Card Concluídas */}
-        <div className="bg-gradient-to-br from-cool-green/10 to-cool-green/5 dark:from-cool-green/20 dark:to-cool-green/10 border border-cool-green/20 rounded-xl p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">
-                Concluídas
-              </p>
-              <p className="text-3xl font-bold text-cool-green">
-                {completedTasks}
-              </p>
-            </div>
-            <div className="text-4xl">✅</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Filtros */}
-      <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-neutral-200 dark:border-neutral-700 p-4">
-        {/* Filtro por categoria */}
-        <div className="mb-4">
-          <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
-            📁 Filtrar por categoria
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat.value}
-                onClick={() => setCategory(cat.value)}
-                className={`
-                  px-4 py-2 rounded-lg font-medium
-                  transition-all duration-200
-                  flex items-center gap-2
-                  ${
-                    category === cat.value
-                      ? "bg-warm-orange text-white shadow-md scale-105"
-                      : "bg-neutral-100 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600"
-                  }
-                `}
-              >
-                <span>{cat.icon}</span>
-                <span>{cat.label}</span>
-              </button>
+        {/* Grid de tarefas */}
+        {filteredTasks.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4">
+            {filteredTasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onStatusUpdate={updateLocalTask}
+              />
             ))}
           </div>
-        </div>
-
-        {/* Filtro por status */}
-        <div>
-          <label className="block text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
-            🎯 Filtrar por status
-          </label>
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setStatusFilter("all")}
-              className={`
-                px-4 py-2 rounded-lg font-medium
-                transition-all duration-200
-                ${
-                  statusFilter === "all"
-                    ? "bg-cool-blue text-white shadow-md scale-105"
-                    : "bg-neutral-100 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600"
-                }
-              `}
-            >
-              Todas
-            </button>
-            <button
-              onClick={() => setStatusFilter("pending")}
-              className={`
-                px-4 py-2 rounded-lg font-medium
-                transition-all duration-200
-                ${
-                  statusFilter === "pending"
-                    ? "bg-warm-orange text-white shadow-md scale-105"
-                    : "bg-neutral-100 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600"
-                }
-              `}
-            >
-              Pendentes
-            </button>
-            <button
-              onClick={() => setStatusFilter("completed")}
-              className={`
-                px-4 py-2 rounded-lg font-medium
-                transition-all duration-200
-                ${
-                  statusFilter === "completed"
-                    ? "bg-cool-green text-white shadow-md scale-105"
-                    : "bg-neutral-100 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600"
-                }
-              `}
-            >
-              Concluídas
-            </button>
+        ) : (
+          <div className="text-center py-16">
+            <div className="text-6xl mb-4">📝</div>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              Nenhuma tarefa encontrada
+            </h3>
+            <p className="text-gray-500">
+              Comece adicionando uma nova tarefa ou ajuste os filtros.
+            </p>
           </div>
-        </div>
-      </div>
-
-      {/* Grid de tarefas */}
-      {filteredTasks.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredTasks.map((task, index) => (
-            <div
-              key={task.id}
-              className="animate-fade-in-up"
-              style={{ animationDelay: `${index * 0.05}s` }}
-            >
-              <TaskCard task={task} onStatusUpdate={updateLocalTask} />
-            </div>
-          ))}
-        </div>
-      ) : (
-        // Mensagem quando não há tarefas
-        <div className="text-center py-16">
-          <div className="text-6xl mb-4">🎉</div>
-          <h3 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
-            Nenhuma tarefa encontrada
-          </h3>
-          <p className="text-neutral-500 dark:text-neutral-400">
-            {statusFilter === "completed" && totalTasks > 0
-              ? "Você ainda não concluiu nenhuma tarefa. Vamos lá!"
-              : statusFilter === "pending" && totalTasks > 0
-              ? "Parabéns! Você não tem tarefas pendentes! 🎊"
-              : "Aproveite seu tempo livre ou adicione novas tarefas."}
-          </p>
-        </div>
-      )}
-    </div>
+        )}
+      </main>
+    </>
   );
 }
