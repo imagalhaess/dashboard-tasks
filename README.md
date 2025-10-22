@@ -1,187 +1,124 @@
-# TaskOrganizer - Organizador Pessoal de Tarefas
+# TaskFlow - Gerenciador de Tarefas Moderno 🚀
 
-## Visão Geral
+## 🎨 Design
 
-Um organizador de tarefas profissional, responsivo e altamente user-friendly. Interface limpa com foco em produtividade e facilidade de uso.
+Interface moderna e profissional inspirada em apps como **Notion**, **Linear** e **Todoist**.
 
-## Características Principais
+### Características do Design
 
-### Design e UX
+- ✨ **Glassmorphism** - Efeitos de vidro e blur
+- 🌈 **Gradientes Suaves** - Cores vibrantes mas elegantes
+- 🎭 **Animações Fluidas** - Micro-interações suaves
+- 📱 **Mobile-First** - Responsivo em todos dispositivos
+- 🎯 **Alta Usabilidade** - Interface intuitiva e limpa
 
-- **Layout Responsivo**: Design mobile-first que se adapta perfeitamente a qualquer dispositivo
-- **Paleta de Cores**: Tons neutros para concentração, com cores vibrantes para destaques
-- **Hierarquia Visual Clara**: Elementos organizados de forma intuitiva
-- **Feedback Visual**: Estados claros para todas as interações do usuário
-- **Acessibilidade**: Contraste adequado e navegação por teclado
+## 🛠️ Tecnologias
 
-### Funcionalidades
+- **Next.js 15** - Framework React moderno
+- **TypeScript** - Tipagem estática
+- **Tailwind CSS** - Estilização utility-first
+- **GraphQL** - API de dados (mock)
+- **Jest** - Testes
 
-1. **Gestão de Tarefas**
+## 🚀 Como Rodar
 
-   - Criar, editar e excluir tarefas
-   - Marcar tarefas como concluídas
-   - Campos: título, descrição, data, prioridade, categoria
+### Desenvolvimento
 
-2. **Organização**
-
-   - Prioridades: Alta, Média, Baixa (com cores distintas)
-   - Categorias: Trabalho, Pessoal, Estudos (personalizáveis)
-   - Indicador visual de tarefas atrasadas
-
-3. **Visualizações**
-
-   - Todas as tarefas
-   - Tarefas de hoje
-   - Tarefas da semana
-   - Tarefas concluídas
-
-4. **Filtros e Busca**
-
-   - Busca rápida por título ou descrição
-   - Filtro por prioridade
-   - Filtro por categoria
-   - Contadores dinâmicos em cada filtro
-
-5. **Ordenação**
-   - Por data de vencimento
-   - Por prioridade
-   - Por nome (ordem alfabética)
-
-## Estrutura do Projeto
-
-```
-dashboard-tasks/
-├── index.html      # Estrutura HTML da aplicação
-├── styles.css      # Estilos CSS com design responsivo
-├── script.js       # Lógica JavaScript
-└── README.md       # Documentação
+```bash
+npm install
+npm run dev
 ```
 
-## Como Usar
+Acesse http://localhost:3000
 
-### 1. Abrir a Aplicação
+### Produção
 
-Simplesmente abra o arquivo `index.html` em qualquer navegador moderno (Chrome, Firefox, Safari, Edge).
+```bash
+npm run build
+npm start
+```
 
-### 2. Adicionar uma Tarefa
+### Deploy
 
-1. Clique no botão "+ Nova Tarefa" no topo da página
-2. Preencha os campos obrigatórios:
-   - Título da tarefa
-   - Data de vencimento
-   - Prioridade
-   - Categoria
-3. Opcionalmente adicione uma descrição
-4. Clique em "Salvar Tarefa"
+O projeto está configurado para deploy automático no **Vercel**.
 
-### 3. Gerenciar Tarefas
+## 📦 Estrutura
 
-- **Concluir**: Clique no checkbox ao lado da tarefa
-- **Editar**: Clique no botão "Editar" no card da tarefa
-- **Excluir**: Clique no botão "Excluir" (pedirá confirmação)
+```
+├── app/              # Páginas Next.js
+├── components/       # Componentes React
+├── hooks/            # Custom hooks
+├── lib/              # Utilitários e GraphQL
+└── styles/           # Estilos globais
+```
 
-### 4. Filtrar e Buscar
+## ✨ Funcionalidades
 
-- Use a barra de busca no topo para procurar tarefas
-- Clique nos itens da sidebar para filtrar por visualização, prioridade ou categoria
-- Use o dropdown "Ordenar por" para mudar a ordem de exibição
+### Gestão de Tarefas
 
-### 5. Mobile
+- ✅ Criar, editar e excluir tarefas
+- ✅ Marcar como concluída
+- ✅ Busca em tempo real
+- ✅ Filtros por status e categoria
 
-- No mobile, clique no ícone de menu (hamburguer) para abrir a sidebar
-- Todos os recursos estão disponíveis em telas pequenas
+### Categorias
 
-## Tecnologias Utilizadas
+- 💼 **Trabalho** - Cor azul
+- 🏠 **Pessoal** - Cor roxa
+- 📚 **Estudos** - Cor índigo
 
-- **HTML5**: Estrutura semântica e acessível
-- **CSS3**: Variáveis CSS, Flexbox, Grid, Media Queries
-- **JavaScript (ES6+)**: Lógica moderna e funcional
-- **LocalStorage**: Persistência de dados no navegador
+### Estatísticas
 
-## Paleta de Cores
+- 📊 Total de tarefas
+- ⏳ Tarefas pendentes
+- ✅ Tarefas concluídas
 
-| Cor               | Hex     | Uso                            |
-| ----------------- | ------- | ------------------------------ |
-| Verde (Principal) | #10b981 | Ações principais, estado ativo |
-| Vermelho          | #ef4444 | Prioridade alta, exclusões     |
-| Laranja           | #f59e0b | Prioridade média               |
-| Azul              | #3b82f6 | Prioridade baixa               |
-| Cinza Claro       | #f5f7fa | Fundo da página                |
-| Branco            | #ffffff | Cards e elementos principais   |
-| Cinza Escuro      | #1f2937 | Texto principal                |
+## 🎨 Paleta de Cores
 
-## Breakpoints Responsivos
+| Elemento    | Cor                     |
+| ----------- | ----------------------- |
+| Primário    | Blue 500 → Indigo 600   |
+| Trabalho    | Blue 500 → Cyan 600     |
+| Pessoal     | Purple 500 → Pink 600   |
+| Estudos     | Indigo 500 → Purple 600 |
+| Pendente    | Amber 500 → Orange 600  |
+| Concluído   | Emerald 500 → Green 600 |
 
-- **Mobile**: até 480px (menu compacto, layout vertical)
-- **Tablet**: 481px a 768px (sidebar recolhível)
-- **Desktop**: 769px a 1024px (layout completo)
-- **Desktop Grande**: acima de 1024px (largura máxima do conteúdo)
+## 🔄 Estado da Aplicação
 
-## Armazenamento de Dados
+Os dados são gerenciados através de:
 
-As tarefas são salvas automaticamente no **localStorage** do navegador. Isso significa:
+- **Custom Hooks** - useTasks, useToggleStatus
+- **GraphQL Client** - Consultas e mutações
+- **Mock Data** - Dados de exemplo para desenvolvimento
 
-- ✅ Dados persistem mesmo após fechar o navegador
-- ✅ Não precisa de servidor ou banco de dados
-- ✅ Totalmente offline
-- ⚠️ Dados são locais a cada dispositivo/navegador
-- ⚠️ Limpar cache do navegador apaga as tarefas
+## 📝 Boas Práticas
 
-## Boas Práticas Implementadas
+✅ **Clean Code** - Nomes descritivos, funções pequenas
+✅ **TypeScript** - Tipagem estrita
+✅ **Componentização** - Componentes reutilizáveis
+✅ **Comentários** - Documentação didática
+✅ **Responsividade** - Mobile-first design
+✅ **Acessibilidade** - ARIA labels, contraste
 
-### UX (Experiência do Usuário)
+## 🎯 Performance
 
-- Feedback visual imediato em todas as ações
-- Confirmação antes de excluir tarefas
-- Estados hover/focus claros em botões e links
-- Loading states e animações suaves
-- Foco automático em campos de formulário
-- Mensagens de estado vazio amigáveis
+- ⚡ Build otimizado com Next.js
+- 🎨 CSS-in-JS com Tailwind (purge automático)
+- 📦 Code splitting automático
+- 🖼️ Imagens otimizadas
 
-### Design
+## 📱 Navegadores Suportados
 
-- Mobile-first: desenvolvido primeiro para mobile, depois desktop
-- Espaçamento consistente usando variáveis CSS
-- Tipografia legível em todas as resoluções
-- Cores com propósito semântico
-- Contraste adequado para acessibilidade (WCAG)
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
 
-### Código
+## 📄 Licença
 
-- Comentários didáticos explicando cada seção
-- Nomes de variáveis e funções descritivos
-- Funções pequenas com responsabilidade única (SRP)
-- Separação clara entre dados, lógica e apresentação
-- Prevenção de XSS com escape de HTML
-- Event delegation para melhor performance
-
-## Possíveis Melhorias Futuras
-
-- Adicionar modo escuro (dark mode)
-- Permitir criar categorias personalizadas
-- Adicionar subtarefas
-- Implementar notificações de prazos
-- Sincronização com a nuvem
-- Exportar/importar tarefas (JSON, CSV)
-- Arrastar e soltar para reordenar
-- Estatísticas e gráficos de produtividade
-- Recorrência de tarefas (diária, semanal, mensal)
-
-## Navegadores Suportados
-
-- Chrome/Edge (versão 90+)
-- Firefox (versão 88+)
-- Safari (versão 14+)
-- Opera (versão 76+)
-
-## Licença
-
-Este projeto é de código aberto e pode ser usado livremente para fins educacionais e comerciais.
-
-## Contato
-
-Para dúvidas ou sugestões sobre o projeto, consulte a documentação ou analise o código-fonte comentado.
+MIT - Projeto educacional
 
 ---
 
-**Desenvolvido com foco em simplicidade, usabilidade e boas práticas de desenvolvimento web.**
+**Desenvolvido com ❤️ usando Next.js e Tailwind CSS**

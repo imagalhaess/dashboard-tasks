@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "../styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "TaskOrganizer - Gerenciador de Tarefas",
+  title: "TaskFlow - Gerenciador de Tarefas Moderno",
   description:
-    "Organize suas tarefas de forma simples e eficiente. Interface profissional e responsiva.",
+    "Organize suas tarefas com estilo. Interface moderna, limpa e produtiva.",
 };
 
 export default function RootLayout({
@@ -14,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+      </body>
     </html>
   );
 }

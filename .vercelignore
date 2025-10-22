@@ -1,0 +1,3 @@
+# Ignorar backup do Next.js
+.nextjs-backup/
+node_modules/

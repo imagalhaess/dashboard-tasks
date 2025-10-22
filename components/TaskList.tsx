@@ -1,306 +1,250 @@
 "use client";
+
 import { useState } from "react";
 import { useTasks } from "@/hooks/useTasks";
 import TaskCard from "@/components/TaskCard";
 
-/**
- * TaskList - Sistema completo de gerenciamento de tarefas
- *
- * Layout:
- * - Sidebar fixa com filtros e navegação
- * - Área principal com grid de tarefas
- * - Responsivo: sidebar vira menu em mobile
- */
-export default function TaskList() {
-  const [view, setView] = useState<"all" | "today" | "week" | "completed">(
-    "all"
-  );
-  const [priority, setPriority] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+interface TaskListProps {
+  searchQuery?: string;
+}
 
-  const { tasks, loading, error, updateLocalTask } = useTasks();
+/**
+ * TaskList - Lista de tarefas com design moderno
+ * 
+ * Features:
+ * - Filtros visuais com badges
+ * - Grid responsivo
+ * - Animações suaves
+ * - Loading e error states bonitos
+ */
+export default function TaskList({ searchQuery = "" }: TaskListProps) {
+  const [category, setCategory] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "completed">("all");
+  
+  const { tasks, loading, error, updateLocalTask } = useTasks(category);
 
   // Filtrar tarefas
   const filteredTasks = tasks.filter((task) => {
-    // Filtro de visualização
-    if (view === "completed" && task.status !== "completed") return false;
-    if (view === "today") {
-      const today = new Date().toDateString();
-      const taskDate = new Date(task.createdAt).toDateString();
-      if (today !== taskDate) return false;
+    // Filtro de status
+    if (statusFilter !== "all" && task.status !== statusFilter) return false;
+    
+    // Filtro de busca
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      return (
+        task.title.toLowerCase().includes(query) ||
+        (task.description && task.description.toLowerCase().includes(query))
+      );
     }
-
-    // Filtro de categoria
-    if (category && task.category !== category) return false;
-
+    
     return true;
   });
 
-  // Contadores
-  const counts = {
-    all: tasks.length,
-    today: tasks.filter(
-      (t) => new Date(t.createdAt).toDateString() === new Date().toDateString()
-    ).length,
-    week: tasks.length, // Simplificado
-    completed: tasks.filter((t) => t.status === "completed").length,
-    work: tasks.filter((t) => t.category === "Trabalho").length,
-    personal: tasks.filter((t) => t.category === "Pessoal").length,
-    study: tasks.filter((t) => t.category === "Estudos").length,
+  // Stats
+  const stats = {
+    total: tasks.length,
+    pending: tasks.filter(t => t.status === "pending").length,
+    completed: tasks.filter(t => t.status === "completed").length,
   };
 
-  // Loading state
+  // Loading
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-emerald-600"></div>
-          <p className="mt-4 text-gray-600">Carregando tarefas...</p>
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 border-4 border-blue-200 rounded-full animate-ping"></div>
+          <div className="absolute inset-0 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
+        <p className="mt-4 text-slate-600 font-medium">Carregando tarefas...</p>
       </div>
     );
   }
 
-  // Error state
+  // Error
   if (error) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md text-center">
-          <div className="text-4xl mb-3">⚠️</div>
-          <h3 className="text-lg font-semibold text-red-800 mb-2">
+      <div className="max-w-md mx-auto">
+        <div className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 rounded-2xl p-6 text-center shadow-lg">
+          <div className="text-5xl mb-3">⚠️</div>
+          <h3 className="text-xl font-bold text-red-900 mb-2">
             Ops! Algo deu errado
           </h3>
-          <p className="text-red-600">{error}</p>
+          <p className="text-red-700">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <>
-      {/* Sidebar - Filtros e navegação */}
-      <aside
-        className={`
-        fixed lg:sticky top-16 left-0 bottom-0 
-        w-64 bg-white border-r border-gray-200 
-        p-6 overflow-y-auto z-40
-        transition-transform duration-300
-        ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-      `}
-      >
-        {/* Visualizações */}
-        <div className="mb-8">
-          <h2 className="text-xs font-bold uppercase text-gray-500 mb-3 tracking-wider">
-            Visualizações
-          </h2>
-          <nav className="space-y-1">
-            <button
-              onClick={() => {
-                setView("all");
-                setPriority("");
-                setCategory("");
-              }}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
-                view === "all" && !priority && !category
-                  ? "bg-emerald-100 text-emerald-700 font-semibold"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <span className="flex items-center gap-3">
-                <span>📋</span>
-                <span>Todas as Tarefas</span>
-              </span>
-              <span className="text-xs bg-gray-200 px-2 py-1 rounded-full">
-                {counts.all}
-              </span>
-            </button>
-
-            <button
-              onClick={() => {
-                setView("today");
-                setPriority("");
-                setCategory("");
-              }}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
-                view === "today"
-                  ? "bg-emerald-100 text-emerald-700 font-semibold"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <span className="flex items-center gap-3">
-                <span>📅</span>
-                <span>Hoje</span>
-              </span>
-              <span className="text-xs bg-gray-200 px-2 py-1 rounded-full">
-                {counts.today}
-              </span>
-            </button>
-
-            <button
-              onClick={() => {
-                setView("completed");
-                setPriority("");
-                setCategory("");
-              }}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
-                view === "completed"
-                  ? "bg-emerald-100 text-emerald-700 font-semibold"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <span className="flex items-center gap-3">
-                <span>✓</span>
-                <span>Concluídas</span>
-              </span>
-              <span className="text-xs bg-gray-200 px-2 py-1 rounded-full">
-                {counts.completed}
-              </span>
-            </button>
-          </nav>
+    <div className="space-y-6">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="group bg-gradient-to-br from-white to-slate-50 rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 cursor-pointer">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-600 mb-1">Total</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                {stats.total}
+              </p>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-500 to-slate-600 flex items-center justify-center shadow-lg shadow-slate-500/20 group-hover:scale-110 transition-transform">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+          </div>
         </div>
 
-        {/* Categorias */}
-        <div>
-          <h2 className="text-xs font-bold uppercase text-gray-500 mb-3 tracking-wider">
-            Categorias
-          </h2>
-          <nav className="space-y-1">
-            <button
-              onClick={() => {
-                setCategory("Trabalho");
-                setView("all");
-                setPriority("");
-              }}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
-                category === "Trabalho"
-                  ? "bg-blue-100 text-blue-700 font-semibold"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <span className="flex items-center gap-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                <span>Trabalho</span>
-              </span>
-              <span className="text-xs bg-gray-200 px-2 py-1 rounded-full">
-                {counts.work}
-              </span>
-            </button>
-
-            <button
-              onClick={() => {
-                setCategory("Pessoal");
-                setView("all");
-                setPriority("");
-              }}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
-                category === "Pessoal"
-                  ? "bg-emerald-100 text-emerald-700 font-semibold"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <span className="flex items-center gap-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                <span>Pessoal</span>
-              </span>
-              <span className="text-xs bg-gray-200 px-2 py-1 rounded-full">
-                {counts.personal}
-              </span>
-            </button>
-
-            <button
-              onClick={() => {
-                setCategory("Estudos");
-                setView("all");
-                setPriority("");
-              }}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
-                category === "Estudos"
-                  ? "bg-purple-100 text-purple-700 font-semibold"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <span className="flex items-center gap-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
-                <span>Estudos</span>
-              </span>
-              <span className="text-xs bg-gray-200 px-2 py-1 rounded-full">
-                {counts.study}
-              </span>
-            </button>
-          </nav>
+        <div className="group bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 cursor-pointer">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-amber-700 mb-1">Pendentes</p>
+              <p className="text-3xl font-bold text-amber-600">
+                {stats.pending}
+              </p>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
         </div>
-      </aside>
 
-      {/* Overlay para mobile */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
+        <div className="group bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl p-6 border border-emerald-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 cursor-pointer">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-emerald-700 mb-1">Concluídas</p>
+              <p className="text-3xl font-bold text-emerald-600">
+                {stats.completed}
+              </p>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Filtros */}
+      <div className="bg-white/70 backdrop-blur-xl rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-sm font-semibold text-slate-700">Filtrar:</span>
+          
+          {/* Filtros de status */}
+          <button
+            onClick={() => setStatusFilter("all")}
+            className={`px-4 py-2 rounded-xl font-medium text-sm transition-all ${
+              statusFilter === "all"
+                ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            Todas
+          </button>
+          
+          <button
+            onClick={() => setStatusFilter("pending")}
+            className={`px-4 py-2 rounded-xl font-medium text-sm transition-all ${
+              statusFilter === "pending"
+                ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            Pendentes
+          </button>
+          
+          <button
+            onClick={() => setStatusFilter("completed")}
+            className={`px-4 py-2 rounded-xl font-medium text-sm transition-all ${
+              statusFilter === "completed"
+                ? "bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg shadow-emerald-500/30"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            Concluídas
+          </button>
+
+          <div className="w-px h-6 bg-slate-300 ml-2"></div>
+
+          {/* Filtros de categoria */}
+          <button
+            onClick={() => setCategory("")}
+            className={`px-4 py-2 rounded-xl font-medium text-sm transition-all ${
+              category === ""
+                ? "bg-slate-900 text-white shadow-lg"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            Todas Categorias
+          </button>
+          
+          <button
+            onClick={() => setCategory("Trabalho")}
+            className={`px-4 py-2 rounded-xl font-medium text-sm transition-all ${
+              category === "Trabalho"
+                ? "bg-blue-600 text-white shadow-lg"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            💼 Trabalho
+          </button>
+          
+          <button
+            onClick={() => setCategory("Pessoal")}
+            className={`px-4 py-2 rounded-xl font-medium text-sm transition-all ${
+              category === "Pessoal"
+                ? "bg-purple-600 text-white shadow-lg"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            🏠 Pessoal
+          </button>
+          
+          <button
+            onClick={() => setCategory("Estudos")}
+            className={`px-4 py-2 rounded-xl font-medium text-sm transition-all ${
+              category === "Estudos"
+                ? "bg-indigo-600 text-white shadow-lg"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            📚 Estudos
+          </button>
+        </div>
+      </div>
+
+      {/* Grid de tarefas */}
+      {filteredTasks.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredTasks.map((task, index) => (
+            <div
+              key={task.id}
+              className="animate-fade-in"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <TaskCard task={task} onStatusUpdate={updateLocalTask} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-16">
+          <div className="text-7xl mb-4 animate-bounce">📝</div>
+          <h3 className="text-2xl font-bold text-slate-900 mb-2">
+            Nenhuma tarefa encontrada
+          </h3>
+          <p className="text-slate-600 mb-6">
+            {searchQuery 
+              ? `Nenhum resultado para "${searchQuery}"`
+              : "Comece adicionando uma nova tarefa ou ajuste os filtros."}
+          </p>
+          <button className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-105 transition-all">
+            + Adicionar Tarefa
+          </button>
+        </div>
       )}
-
-      {/* Botão hamburguer mobile */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="fixed bottom-6 right-6 lg:hidden bg-emerald-600 text-white p-4 rounded-full shadow-lg z-50"
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
-      </button>
-
-      {/* Área principal de conteúdo */}
-      <main className="flex-1 p-6 lg:p-8 max-w-7xl">
-        {/* Header da seção */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">
-            {view === "all" && !category
-              ? "Todas as Tarefas"
-              : view === "today"
-              ? "Tarefas de Hoje"
-              : view === "completed"
-              ? "Tarefas Concluídas"
-              : category
-              ? category
-              : "Tarefas"}
-          </h2>
-          <p className="text-gray-600">Gerencie suas atividades</p>
-        </div>
-
-        {/* Grid de tarefas */}
-        {filteredTasks.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4">
-            {filteredTasks.map((task) => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onStatusUpdate={updateLocalTask}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">📝</div>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">
-              Nenhuma tarefa encontrada
-            </h3>
-            <p className="text-gray-500">
-              Comece adicionando uma nova tarefa ou ajuste os filtros.
-            </p>
-          </div>
-        )}
-      </main>
-    </>
+    </div>
   );
 }
