@@ -1,15 +1,76 @@
-@import "tailwindcss";
-
-* {
+/* Reset simples para margens e padding */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Fonte base para o corpo */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: #fff9e5; /* Cor clara e quente compatível com seu tema */
+  color: #422f00; /* Cor texto escura para contraste */
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* Links padrão */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Listas sem estilo */
+ul,
+ol {
+  list-style: none;
+}
+
+/* Botões com cursor pointer */
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Form inputs padronizados */
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+/* Evita que inputs e textareas tenham sombra padrão no foco */
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+  outline-offset: 2px;
+  outline-color: #dba800; /* tom dourado suave para foco */
+  outline-style: solid;
+}
+
+/* Scrollbar customizada (opcional) para browsers que aceitam */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #fff3cc;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #dda500;
+  border-radius: 4px;
+}
+
+/* Resposividade (ajustes finos) */
+@media (max-width: 640px) {
+  body {
+    font-size: 16px;
+  }
 }
