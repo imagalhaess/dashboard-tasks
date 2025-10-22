@@ -176,10 +176,10 @@ export default function Home() {
                 Por Status
               </p>
               <div className="flex flex-wrap gap-3">
-                {["all", "active", "completed"].map((status) => (
+                {(["all", "active", "completed"] as const).map((status) => (
                   <button
                     key={status}
-                    onClick={() => setFilter(status as any)}
+                    onClick={() => setFilter(status)}
                     className={`px-5 py-2.5 rounded-lg font-semibold transition-colors duration-300 cursor-pointer select-none ${
                       filter === status
                         ? "bg-yellow-600 text-white shadow-lg"
@@ -202,25 +202,27 @@ export default function Home() {
                 Por Categoria
               </p>
               <div className="flex flex-wrap gap-3">
-                {["all", "Trabalho", "Pessoal", "Estudos"].map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setCategoryFilter(cat)}
-                    className={`px-5 py-2.5 rounded-lg font-semibold transition-colors duration-300 cursor-pointer select-none ${
-                      categoryFilter === cat
-                        ? "bg-yellow-600 text-white shadow-lg"
-                        : "bg-yellow-100 text-yellow-900 hover:bg-yellow-300"
-                    }`}
-                  >
-                    {cat === "all"
-                      ? "Todas"
-                      : cat === "Trabalho"
-                      ? "💼 Trabalho"
-                      : cat === "Pessoal"
-                      ? "🏠 Pessoal"
-                      : "📚 Estudos"}
-                  </button>
-                ))}
+                {(["all", "Trabalho", "Pessoal", "Estudos"] as const).map(
+                  (cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setCategoryFilter(cat)}
+                      className={`px-5 py-2.5 rounded-lg font-semibold transition-colors duration-300 cursor-pointer select-none ${
+                        categoryFilter === cat
+                          ? "bg-yellow-600 text-white shadow-lg"
+                          : "bg-yellow-100 text-yellow-900 hover:bg-yellow-300"
+                      }`}
+                    >
+                      {cat === "all"
+                        ? "Todas"
+                        : cat === "Trabalho"
+                        ? "💼 Trabalho"
+                        : cat === "Pessoal"
+                        ? "🏠 Pessoal"
+                        : "📚 Estudos"}
+                    </button>
+                  )
+                )}
               </div>
             </div>
           </section>
