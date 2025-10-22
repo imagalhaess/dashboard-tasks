@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Organizador de Tarefas</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Header Principal: contém logo, busca e ações rápidas -->
+    <header class="header">
+      <div class="header-content">
+        <!-- Botão do menu mobile (hamburguer) -->
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="logo">
+          <h1>TaskOrganizer</h1>
+        </div>
+
+        <!-- Campo de busca rápida -->
+        <div class="search-box">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Buscar tarefas..."
+            aria-label="Buscar tarefas"
+          />
+          <span class="search-icon">🔍</span>
+        </div>
+
+        <!-- Botão para adicionar nova tarefa -->
+        <button class="btn btn-primary" id="addTaskBtn">+ Nova Tarefa</button>
+      </div>
+    </header>
+
+    <!-- Container principal: sidebar + conteúdo -->
+    <div class="main-container">
+      <!-- Sidebar: filtros, categorias e visualizações -->
+      <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+          <h2 class="sidebar-title">Visualizações</h2>
+
+          <!-- Links de navegação para diferentes visualizações -->
+          <ul class="nav-list">
+            <li>
+              <a href="#" class="nav-item active" data-view="all">
+                <span class="nav-icon">📋</span>
+                <span>Todas as Tarefas</span>
+                <span class="task-count" id="countAll">0</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-item" data-view="today">
+                <span class="nav-icon">📅</span>
+                <span>Hoje</span>
+                <span class="task-count" id="countToday">0</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-item" data-view="week">
+                <span class="nav-icon">📆</span>
+                <span>Esta Semana</span>
+                <span class="task-count" id="countWeek">0</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-item" data-view="completed">
+                <span class="nav-icon">✓</span>
+                <span>Concluídas</span>
+                <span class="task-count" id="countCompleted">0</span>
+              </a>
+            </li>
+          </ul>
+
+          <!-- Filtro por prioridade -->
+          <h2 class="sidebar-title">Prioridades</h2>
+          <ul class="nav-list">
+            <li>
+              <a href="#" class="nav-item" data-priority="high">
+                <span class="priority-badge priority-high"></span>
+                <span>Alta</span>
+                <span class="task-count" id="countHigh">0</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-item" data-priority="medium">
+                <span class="priority-badge priority-medium"></span>
+                <span>Média</span>
+                <span class="task-count" id="countMedium">0</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-item" data-priority="low">
+                <span class="priority-badge priority-low"></span>
+                <span>Baixa</span>
+                <span class="task-count" id="countLow">0</span>
+              </a>
+            </li>
+          </ul>
+
+          <!-- Filtro por categorias personalizadas -->
+          <h2 class="sidebar-title">Categorias</h2>
+          <ul class="nav-list" id="categoriesList">
+            <li>
+              <a href="#" class="nav-item" data-category="work">
+                <span class="category-dot" style="background: #3b82f6"></span>
+                <span>Trabalho</span>
+                <span class="task-count" id="countWork">0</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-item" data-category="personal">
+                <span class="category-dot" style="background: #10b981"></span>
+                <span>Pessoal</span>
+                <span class="task-count" id="countPersonal">0</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-item" data-category="study">
+                <span class="category-dot" style="background: #8b5cf6"></span>
+                <span>Estudos</span>
+                <span class="task-count" id="countStudy">0</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Área de conteúdo principal onde as tarefas são exibidas -->
+      <main class="content">
+        <!-- Cabeçalho da seção com título dinâmico e ordenação -->
+        <div class="content-header">
+          <div>
+            <h2 class="content-title" id="contentTitle">Todas as Tarefas</h2>
+            <p class="content-subtitle" id="contentSubtitle">
+              Gerencie suas atividades
+            </p>
+          </div>
+
+          <!-- Controles de ordenação -->
+          <div class="sort-controls">
+            <label for="sortSelect">Ordenar por:</label>
+            <select id="sortSelect" class="sort-select">
+              <option value="date">Data</option>
+              <option value="priority">Prioridade</option>
+              <option value="name">Nome</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Mensagem quando não há tarefas -->
+        <div class="empty-state" id="emptyState">
+          <div class="empty-state-icon">📝</div>
+          <h3>Nenhuma tarefa encontrada</h3>
+          <p>Comece adicionando uma nova tarefa ou ajuste os filtros.</p>
+          <button class="btn btn-primary" id="addTaskBtnEmpty">
+            + Adicionar Tarefa
+          </button>
+        </div>
+
+        <!-- Lista de tarefas: será preenchida dinamicamente pelo JavaScript -->
+        <div class="tasks-container" id="tasksContainer">
+          <!-- As tarefas serão inseridas aqui via JavaScript -->
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal para adicionar/editar tarefa -->
+    <div class="modal" id="taskModal">
+      <div class="modal-overlay" id="modalOverlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalTitle">Nova Tarefa</h3>
+          <button class="modal-close" id="modalClose" aria-label="Fechar">
+            ×
+          </button>
+        </div>
+
+        <form class="modal-body" id="taskForm">
+          <!-- Campo: Título da tarefa -->
+          <div class="form-group">
+            <label for="taskTitle">Título da Tarefa *</label>
+            <input
+              type="text"
+              id="taskTitle"
+              class="form-input"
+              placeholder="Digite o título da tarefa"
+              required
+            />
+          </div>
+
+          <!-- Campo: Descrição (opcional) -->
+          <div class="form-group">
+            <label for="taskDescription">Descrição</label>
+            <textarea
+              id="taskDescription"
+              class="form-textarea"
+              rows="3"
+              placeholder="Adicione detalhes sobre a tarefa"
+            ></textarea>
+          </div>
+
+          <!-- Campos em linha: Data e Prioridade -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="taskDate">Data de Vencimento *</label>
+              <input type="date" id="taskDate" class="form-input" required />
+            </div>
+
+            <div class="form-group">
+              <label for="taskPriority">Prioridade *</label>
+              <select id="taskPriority" class="form-select" required>
+                <option value="low">Baixa</option>
+                <option value="medium" selected>Média</option>
+                <option value="high">Alta</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Campo: Categoria -->
+          <div class="form-group">
+            <label for="taskCategory">Categoria *</label>
+            <select id="taskCategory" class="form-select" required>
+              <option value="work">Trabalho</option>
+              <option value="personal">Pessoal</option>
+              <option value="study">Estudos</option>
+            </select>
+          </div>
+
+          <!-- Botões de ação do formulário -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelBtn">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" id="saveBtn">
+              Salvar Tarefa
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Script JavaScript -->
+    <script src="script.js"></script>
+  </body>
+</html>

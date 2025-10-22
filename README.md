@@ -1,179 +1,187 @@
-# 🚀 TaskFlow - Dashboard de Gestão de Tarefas
+# TaskOrganizer - Organizador Pessoal de Tarefas
 
-Uma aplicação web moderna e profissional para listar, filtrar e gerenciar tarefas com foco em produtividade, construída com Next.js, TypeScript e GraphQL.
+## Visão Geral
 
-[🌐 Acessar a Aplicação Publicada](https://dashboard-tasks-y8sz.vercel.app/)
+Um organizador de tarefas profissional, responsivo e altamente user-friendly. Interface limpa com foco em produtividade e facilidade de uso.
 
----
+## Características Principais
 
-## ✨ Destaques do Design
+### Design e UX
 
-- **🎨 Design System Completo**: Paleta de cores cuidadosamente escolhida para promover foco e produtividade
-- **🌙 Modo Escuro**: Toggle manual entre tema claro e escuro com persistência
-- **📱 Totalmente Responsivo**: Funciona perfeitamente em mobile, tablet e desktop
-- **⚡ Animações Suaves**: Feedback visual elegante sem distrações
-- **♿ Acessível**: Seguindo boas práticas de acessibilidade web
+- **Layout Responsivo**: Design mobile-first que se adapta perfeitamente a qualquer dispositivo
+- **Paleta de Cores**: Tons neutros para concentração, com cores vibrantes para destaques
+- **Hierarquia Visual Clara**: Elementos organizados de forma intuitiva
+- **Feedback Visual**: Estados claros para todas as interações do usuário
+- **Acessibilidade**: Contraste adequado e navegação por teclado
 
-## Sumário
+### Funcionalidades
 
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Design System](#design-system)
-- [Como Rodar o Projeto Localmente](#como-rodar-o-projeto-localmente)
-- [Como Rodar os Testes](#como-rodar-os-testes)
-- [Abordagem Técnica](#abordagem-técnica)
-- [Processo de Trabalho](#processo-de-trabalho)
-- [Licença](#licença)
+1. **Gestão de Tarefas**
 
----
+   - Criar, editar e excluir tarefas
+   - Marcar tarefas como concluídas
+   - Campos: título, descrição, data, prioridade, categoria
+
+2. **Organização**
+
+   - Prioridades: Alta, Média, Baixa (com cores distintas)
+   - Categorias: Trabalho, Pessoal, Estudos (personalizáveis)
+   - Indicador visual de tarefas atrasadas
+
+3. **Visualizações**
+
+   - Todas as tarefas
+   - Tarefas de hoje
+   - Tarefas da semana
+   - Tarefas concluídas
+
+4. **Filtros e Busca**
+
+   - Busca rápida por título ou descrição
+   - Filtro por prioridade
+   - Filtro por categoria
+   - Contadores dinâmicos em cada filtro
+
+5. **Ordenação**
+   - Por data de vencimento
+   - Por prioridade
+   - Por nome (ordem alfabética)
+
+## Estrutura do Projeto
+
+```
+dashboard-tasks/
+├── index.html      # Estrutura HTML da aplicação
+├── styles.css      # Estilos CSS com design responsivo
+├── script.js       # Lógica JavaScript
+└── README.md       # Documentação
+```
+
+## Como Usar
+
+### 1. Abrir a Aplicação
+
+Simplesmente abra o arquivo `index.html` em qualquer navegador moderno (Chrome, Firefox, Safari, Edge).
+
+### 2. Adicionar uma Tarefa
+
+1. Clique no botão "+ Nova Tarefa" no topo da página
+2. Preencha os campos obrigatórios:
+   - Título da tarefa
+   - Data de vencimento
+   - Prioridade
+   - Categoria
+3. Opcionalmente adicione uma descrição
+4. Clique em "Salvar Tarefa"
+
+### 3. Gerenciar Tarefas
+
+- **Concluir**: Clique no checkbox ao lado da tarefa
+- **Editar**: Clique no botão "Editar" no card da tarefa
+- **Excluir**: Clique no botão "Excluir" (pedirá confirmação)
+
+### 4. Filtrar e Buscar
+
+- Use a barra de busca no topo para procurar tarefas
+- Clique nos itens da sidebar para filtrar por visualização, prioridade ou categoria
+- Use o dropdown "Ordenar por" para mudar a ordem de exibição
+
+### 5. Mobile
+
+- No mobile, clique no ícone de menu (hamburguer) para abrir a sidebar
+- Todos os recursos estão disponíveis em telas pequenas
 
 ## Tecnologias Utilizadas
 
-- **Frontend:** Next.js 15 (App Router), React 19, TypeScript
-- **Estilização:** Tailwind CSS 4 com sistema de cores customizado
-- **API:** GraphQL (com Apollo Server e dados mockados)
-- **Testes:** Jest e React Testing Library
-- **Deploy:** Vercel
+- **HTML5**: Estrutura semântica e acessível
+- **CSS3**: Variáveis CSS, Flexbox, Grid, Media Queries
+- **JavaScript (ES6+)**: Lógica moderna e funcional
+- **LocalStorage**: Persistência de dados no navegador
 
----
+## Paleta de Cores
 
-## 🎨 Design System
+| Cor               | Hex     | Uso                            |
+| ----------------- | ------- | ------------------------------ |
+| Verde (Principal) | #10b981 | Ações principais, estado ativo |
+| Vermelho          | #ef4444 | Prioridade alta, exclusões     |
+| Laranja           | #f59e0b | Prioridade média               |
+| Azul              | #3b82f6 | Prioridade baixa               |
+| Cinza Claro       | #f5f7fa | Fundo da página                |
+| Branco            | #ffffff | Cards e elementos principais   |
+| Cinza Escuro      | #1f2937 | Texto principal                |
 
-### Filosofia de Design
+## Breakpoints Responsivos
 
-O design foi criado especificamente para apps de **tarefas e foco**, usando psicologia das cores:
+- **Mobile**: até 480px (menu compacto, layout vertical)
+- **Tablet**: 481px a 768px (sidebar recolhível)
+- **Desktop**: 769px a 1024px (layout completo)
+- **Desktop Grande**: acima de 1024px (largura máxima do conteúdo)
 
-- **Cores Neutras** (cinza, branco): Base limpa que não distrai
-- **Cores Quentes** (laranja, amarelo): Ação, motivação e prioridades
-- **Cores Frias** (azul, verde): Calma, confiança e conclusão
+## Armazenamento de Dados
 
-### Características do Design
+As tarefas são salvas automaticamente no **localStorage** do navegador. Isso significa:
 
-#### 🎯 Sistema de Cores Profissional
+- ✅ Dados persistem mesmo após fechar o navegador
+- ✅ Não precisa de servidor ou banco de dados
+- ✅ Totalmente offline
+- ⚠️ Dados são locais a cada dispositivo/navegador
+- ⚠️ Limpar cache do navegador apaga as tarefas
 
-- Paleta neutra para fundos e textos
-- Amarelo/Laranja para botões de ação e status pendentes
-- Verde para tarefas concluídas
-- Azul para elementos informativos
+## Boas Práticas Implementadas
 
-#### 🌗 Modo Claro e Escuro
+### UX (Experiência do Usuário)
 
-- **Modo Claro**: Minimalista e focado (padrão)
-- **Modo Escuro**: Profissional e reduz fadiga visual
-- Transições suaves entre temas
-- Preferência salva no navegador
+- Feedback visual imediato em todas as ações
+- Confirmação antes de excluir tarefas
+- Estados hover/focus claros em botões e links
+- Loading states e animações suaves
+- Foco automático em campos de formulário
+- Mensagens de estado vazio amigáveis
 
-#### 📊 Componentes Modernos
+### Design
 
-**Header com Identidade Visual**
+- Mobile-first: desenvolvido primeiro para mobile, depois desktop
+- Espaçamento consistente usando variáveis CSS
+- Tipografia legível em todas as resoluções
+- Cores com propósito semântico
+- Contraste adequado para acessibilidade (WCAG)
 
-- Logo com gradiente (laranja → amarelo)
-- Nome do app: TaskFlow 🚀
-- Toggle de tema no canto superior direito
-- Header fixo com efeito de blur
+### Código
 
-**Cards de Tarefa**
+- Comentários didáticos explicando cada seção
+- Nomes de variáveis e funções descritivos
+- Funções pequenas com responsabilidade única (SRP)
+- Separação clara entre dados, lógica e apresentação
+- Prevenção de XSS com escape de HTML
+- Event delegation para melhor performance
 
-- Badge de status visível (Pendente/Concluído)
-- Badge colorido por categoria
-- Informações com ícones SVG
-- Hover effect (card levanta)
-- Botão de ação com gradiente
+## Possíveis Melhorias Futuras
 
-**Painel de Filtros**
+- Adicionar modo escuro (dark mode)
+- Permitir criar categorias personalizadas
+- Adicionar subtarefas
+- Implementar notificações de prazos
+- Sincronização com a nuvem
+- Exportar/importar tarefas (JSON, CSV)
+- Arrastar e soltar para reordenar
+- Estatísticas e gráficos de produtividade
+- Recorrência de tarefas (diária, semanal, mensal)
 
-- Filtros por categoria com botões visuais + ícones
-- Filtros por status (todas/pendentes/concluídas)
-- Feedback visual claro do filtro ativo
+## Navegadores Suportados
 
-**Dashboard de Estatísticas**
-
-- Cards com total, pendentes e concluídas
-- Cores diferentes para cada métrica
-- Gradientes sutis de fundo
-
-#### 📱 Responsividade Total
-
-- Mobile First (1 coluna)
-- Tablet (2 colunas)
-- Desktop (3 colunas)
-- Espaçamentos adaptáveis
-
-#### ⚡ Animações e Feedback Visual
-
-- Cards aparecem com delay escalonado
-- Transições suaves em hovers
-- Spinner de loading animado
-- Estados visuais claros (hover, active, disabled)
-
-### 📖 Documentação Completa
-
-Para detalhes completos do design system, cores, componentes e boas práticas, consulte:
-
-**[📄 Design System Completo](docs/DESIGN_SYSTEM.md)**
-
----
-
-## Como Rodar o Projeto Localmente
-
-### Pré-requisitos
-
-- Node.js (versão LTS recomendada)
-- Git
-
-### Instruções
-
-1.  **Clone o repositório:**
-
-    ```bash
-    git clone https://github.com/imagalhaess/dashboard-tasks.git
-    ```
-
-2.  **Navegue até a pasta do projeto:**
-
-    ```bash
-    cd dashboard-tasks
-    ```
-
-3.  **Instale as dependências:**
-
-    ```bash
-    npm install
-    ```
-
-4.  **Execute a aplicação em modo de desenvolvimento:**
-    ```bash
-    npm run dev
-    ```
-    A aplicação estará disponível em `http://localhost:3000`.
-
----
-
-## Como Rodar os Testes
-
-Para executar os testes unitários que garantem o funcionamento dos componentes principais, utilize o comando:
-
-```bash
-npm test
-```
-
----
-
-## Abordagem Técnica
-
-A arquitetura foi construída com Next.js e o App Router para aproveitar os Server Components e a organização de rotas baseada em pastas. A comunicação com o backend foi feita via GraphQL, uma escolha que permite ao frontend requisitar exatamente os dados de que precisa, evitando over-fetching.
-
-Para um detalhamento mais aprofundado das decisões técnicas e dos desafios encontrados durante o desenvolvimento, consulte o Registro de Decisões de Arquitetura em `docs/modelagem.md`.
-
----
-
-## Processo de Trabalho
-
-O desenvolvimento foi gerenciado utilizando um quadro Kanban no GitHub Projects para organizar as tarefas desde o backlog até a conclusão, seguindo um fluxo de trabalho ágil.
-
-[Acessar a Quadro Kanban do Projeto:](https://github.com/users/imagalhaess/projects/3)
-
----
+- Chrome/Edge (versão 90+)
+- Firefox (versão 88+)
+- Safari (versão 14+)
+- Opera (versão 76+)
 
 ## Licença
 
-MIT © Isabela M.
+Este projeto é de código aberto e pode ser usado livremente para fins educacionais e comerciais.
+
+## Contato
+
+Para dúvidas ou sugestões sobre o projeto, consulte a documentação ou analise o código-fonte comentado.
+
+---
+
+**Desenvolvido com foco em simplicidade, usabilidade e boas práticas de desenvolvimento web.**
