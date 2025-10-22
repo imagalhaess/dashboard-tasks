@@ -1,135 +1,90 @@
-# 📋 TaskFlow - Organizador de Tarefas
+# 📋 TaskFlow - Gerenciador de Tarefas
 
-Interface web moderna e responsiva para gerenciamento de tarefas pessoais, construída com **Next.js 15**, **React 19**, **TypeScript** e **Shadcn/ui**.
-
----
-
-## 🏗️ Arquitetura do Projeto
-
-O projeto segue princípios de **Clean Architecture** e **Clean Code**:
-
-```
-dashboard-tasks/
-├── app/                      # Next.js App Router
-│   ├── api/                  # API Routes (GraphQL)
-│   ├── layout.tsx            # Layout raiz
-│   └── page.tsx              # Página principal
-│
-├── components/               # Componentes React
-│   ├── ui/                   # Componentes Shadcn/ui (reutilizáveis)
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   └── badge.tsx
-│   ├── TaskCard.tsx          # Card de tarefa individual
-│   └── TaskList.tsx          # Lista e filtros de tarefas
-│
-├── hooks/                    # Custom Hooks (lógica de negócio)
-│   ├── useTasks.ts           # Hook para buscar tarefas
-│   └── useToggleStatus.ts    # Hook para alternar status
-│
-├── lib/                      # Bibliotecas e utilitários
-│   ├── graphql/              # Schema e mock data GraphQL
-│   └── utils.ts              # Funções utilitárias (formatação, cores, etc)
-│
-└── styles/                   # Estilos globais
-    └── globals.css           # CSS global com Tailwind
-```
+Aplicação web simples, funcional e bonita para gerenciar suas tarefas do dia a dia.
 
 ---
 
-## ✨ Princípios Aplicados
+## ✨ Funcionalidades
 
-### 1. **Single Responsibility Principle (SRP)**
-- Cada componente tem **uma única responsabilidade**
-- `TaskCard`: renderiza UMA tarefa
-- `TaskList`: gerencia LISTA e filtros
-- `page.tsx`: estrutura o LAYOUT
-
-### 2. **Separation of Concerns**
-- **UI** (`components/ui/`): componentes visuais reutilizáveis
-- **Lógica** (`hooks/`): regras de negócio separadas da apresentação
-- **Dados** (`lib/graphql/`): camada de dados isolada
-
-### 3. **DRY (Don't Repeat Yourself)**
-- Funções utilitárias em `lib/utils.ts`
-- Componentes UI reutilizáveis (Shadcn)
-- Hooks customizados para lógica compartilhada
-
-### 4. **Clean Code**
-- Nomes descritivos e claros
-- Funções pequenas e focadas
-- Comentários didáticos
-- TypeScript para type safety
+✅ **Adicionar tarefas** - Crie novas tarefas com título, descrição e categoria  
+✅ **Marcar como concluída** - Acompanhe seu progresso  
+✅ **Filtrar tarefas** - Por status (todas, pendentes, concluídas)  
+✅ **Filtrar por categoria** - Trabalho, Pessoal, Estudos  
+✅ **Excluir tarefas** - Remova tarefas que não precisa mais  
+✅ **Estatísticas** - Veja total, pendentes e concluídas em tempo real  
+✅ **Design responsivo** - Funciona perfeitamente em mobile e desktop  
+✅ **Interface limpa** - Visual moderno e profissional
 
 ---
 
 ## 🎨 Tecnologias
 
-- **Next.js 15**: Framework React com App Router
-- **React 19**: Biblioteca de UI
-- **TypeScript**: Type safety
-- **Shadcn/ui**: Sistema de componentes
-- **Tailwind CSS**: Estilização
-- **GraphQL**: API de dados
-- **Apollo Server**: Servidor GraphQL
+- **Next.js 15** - Framework React
+- **React 19** - Biblioteca UI
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Estilização
 
 ---
 
 ## 🚀 Como Executar
 
-### 1. Instalar dependências
 ```bash
+# Instalar dependências
 npm install
-```
 
-### 2. Rodar em desenvolvimento
-```bash
+# Rodar em desenvolvimento
 npm run dev
-```
 
-### 3. Acessar
-```
+# Acessar
 http://localhost:3000
 ```
 
 ---
 
-## 📦 Scripts Disponíveis
+## 📂 Estrutura Simplificada
 
-```bash
-npm run dev        # Desenvolvimento
-npm run build      # Build para produção
-npm run start      # Iniciar produção
-npm run lint       # Verificar código
-npm run test       # Rodar testes
+```
+dashboard-tasks/
+├── app/
+│   ├── page.tsx          # Aplicação completa em um arquivo
+│   └── layout.tsx        # Layout raiz
+├── styles/
+│   └── globals.css       # Estilos Tailwind
+└── package.json          # Dependências
 ```
 
 ---
 
-## 🎯 Funcionalidades
+## 💡 Características Técnicas
 
-✅ Listar tarefas  
-✅ Filtrar por status (pendente/concluída)  
-✅ Filtrar por categoria  
-✅ Marcar tarefa como concluída  
-✅ Estatísticas em tempo real  
-✅ Design responsivo (mobile-first)  
-✅ Interface moderna e acessível  
+### **Código Limpo e Simples**
+- Tudo em um único componente para facilitar manutenção
+- Comentários didáticos
+- TypeScript para segurança de tipos
+- Estado gerenciado com React Hooks
+
+### **Performance**
+- Next.js com renderização otimizada
+- CSS do Tailwind com purge automático
+- Sem dependências desnecessárias
+
+### **UX/UI**
+- Design responsivo (mobile-first)
+- Feedback visual em todas as ações
+- Cores consistentes e profissionais
+- Ícones pequenos e proporcionais
 
 ---
 
-## 📝 Próximos Passos
+## 🎯 Próximas Melhorias
 
-- [ ] Adicionar tarefas
-- [ ] Editar tarefas
-- [ ] Excluir tarefas
+- [ ] Editar tarefas existentes
+- [ ] Persistência com banco de dados
 - [ ] Busca por texto
-- [ ] Ordenação personalizada
+- [ ] Ordenação customizada
 - [ ] Dark mode
-- [ ] Persistência de dados real
+- [ ] Tags customizadas
 
 ---
 
-## 👤 Autor
-
-Desenvolvido com 💜 para organizar suas tarefas de forma eficiente!
+Feito com 💙 para organizar suas tarefas!
