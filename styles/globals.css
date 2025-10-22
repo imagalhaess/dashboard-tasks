@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Reset simples para margens e padding */
 *,
 *::before,
@@ -11,8 +15,8 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  background-color: #fff9e5; /* Cor clara e quente compatível com seu tema */
-  color: #422f00; /* Cor texto escura para contraste */
+  background-color: #fff9e5;
+  color: #422f00;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -52,7 +56,7 @@ textarea:focus,
 select:focus,
 button:focus {
   outline-offset: 2px;
-  outline-color: #dba800; /* tom dourado suave para foco */
+  outline-color: #dba800;
   outline-style: solid;
 }
 
