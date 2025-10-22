@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Gerenciador de Tarefas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">✓</div>
+                    <div>
+                        <h1>TaskFlow</h1>
+                        <p class="subtitle">Gerenciador de Tarefas</p>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="openModal()">+ Nova Tarefa</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+        <!-- Welcome -->
+        <section class="welcome-section">
+            <h2>Bem-vindo de volta 👋</h2>
+            <p id="pending-count">Você tem 0 tarefas pendentes hoje</p>
+        </section>
+
+        <!-- Stats Cards -->
+        <section class="stats-section">
+            <h3 class="section-title">Resumo</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <p class="stat-label">Total de Tarefas</p>
+                    <p class="stat-value" id="stat-total">0</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <p class="stat-label">Pendentes</p>
+                    <p class="stat-value stat-orange" id="stat-pending">0</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <p class="stat-label">Concluídas</p>
+                    <p class="stat-value stat-green" id="stat-completed">0</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <section class="filters-section">
+            <h3 class="section-title">Filtros</h3>
+            
+            <div class="filter-group">
+                <p class="filter-label">Por Status</p>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all" onclick="setStatusFilter('all')">Todas</button>
+                    <button class="filter-btn" data-filter="active" onclick="setStatusFilter('active')">Pendentes</button>
+                    <button class="filter-btn" data-filter="completed" onclick="setStatusFilter('completed')">Concluídas</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <p class="filter-label">Por Categoria</p>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-category="all" onclick="setCategoryFilter('all')">Todas</button>
+                    <button class="filter-btn" data-category="Trabalho" onclick="setCategoryFilter('Trabalho')">💼 Trabalho</button>
+                    <button class="filter-btn" data-category="Pessoal" onclick="setCategoryFilter('Pessoal')">🏠 Pessoal</button>
+                    <button class="filter-btn" data-category="Estudos" onclick="setCategoryFilter('Estudos')">📚 Estudos</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tasks -->
+        <section class="tasks-section">
+            <h3 class="section-title">Suas Tarefas (<span id="task-count">0</span>)</h3>
+            <div id="tasks-container" class="tasks-grid"></div>
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <div class="empty-icon">📝</div>
+                <h3>Nenhuma tarefa encontrada</h3>
+                <p>Adicione uma nova tarefa ou ajuste os filtros acima</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2>Criar Nova Tarefa</h2>
+            <form id="task-form" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label>Título da Tarefa *</label>
+                    <input type="text" id="task-title" placeholder="Ex: Revisar relatório mensal" required>
+                </div>
+                <div class="form-group">
+                    <label>Descrição (opcional)</label>
+                    <textarea id="task-description" placeholder="Adicione mais detalhes sobre a tarefa..." rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="task-category">
+                        <option value="Trabalho">💼 Trabalho</option>
+                        <option value="Pessoal">🏠 Pessoal</option>
+                        <option value="Estudos">📚 Estudos</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Criar Tarefa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
